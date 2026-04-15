@@ -1,0 +1,24 @@
+{% macro entity_button(text='', view='', id_data=[], type='', size='sm') %}
+<button onclick="window.location.href='{{url_for(view, id=id_data)}}';"
+    class="btn btn-outline-secondary {{ ('btn-'+type) if type }} px-4">{{text}}</button>
+{% endmacro %}
+
+{% macro entity_buttons(entity_name='', entity_id=[], sub=False, dropdown=False) %}
+{% set btn_size = "sm" if sub else "md" %}
+{% if dropdown %}
+<div class="btn-group btn-group-{{btn_size}}" role="toolbar">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        Actions
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{{url_for('edit_'+entity_name, id=entity_id)}}">Edit</a></li>
+        <li><a class="dropdown-item link-danger" href="{{url_for('delete_'+entity_name, id=entity_id)}}">Delete</a></li>
+    </ul>
+</div>
+{% else %}
+<div class="btn-group btn-group-{{btn_size}}" role="toolbar">
+    {{entity_button (text="Edit", view='edit_'+entity_name, id_data=entity_id, type='info' )}}
+    {{entity_button (text="Delete", view='delete_'+entity_name, id_data=entity_id, type='danger')}}
+</div>
+{% endif%}
+{%endmacro%}

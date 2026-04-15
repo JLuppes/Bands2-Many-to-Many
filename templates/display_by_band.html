@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block title %} {{super()}} - Bands {% endblock %}
+{% from 'components/buttons.html' import entity_buttons %}
 {% block content %}
 <h2>Bands</h2>
 
@@ -8,22 +9,19 @@
         <a href="{{url_for('view_band', id=band.BandID)}}">{{ band.BandName }} ({{ band.FormedYear }})</a>
     </h3>
     {# Add links for edit and delete #}
-    <a href="{{ url_for('edit_band', band_id=band.BandID) }}">Edit</a> |
-    <a href="{{ url_for('delete_band', band_id=band.BandID) }}">Delete</a>
+    {{ entity_buttons(entity_name="band", entity_id=band.BandID)}}
 
     <p><strong>Home:</strong> {{ band.HomeLocation }}</p>
 
     {# Update members section #}
-    <h4>Members / Memberships</h4>
+    <h4>Members</h4>
     <ul>
         {% for m in band.memberships %}
         <li>
             <a href="{{url_for('view_member', id=m.member.MemberID)}}">{{ m.member.MemberName }}</a> - {{ m.Role or m.member.MainPosition }}
             {% if m.StartYear %} ({{ m.StartYear }}{% if m.EndYear %} - {{ m.EndYear }}{% else %} - present{% endif
             %}){% endif %}
-            &nbsp;
-            <a href="{{ url_for('edit_membership', id=m.MembershipID) }}">Edit</a> |
-            <a href="{{ url_for('delete_membership', id=m.MembershipID) }}">Delete</a>
+            {{ entity_buttons(entity_name="membership", entity_id=m.MembershipID, sub=True, dropdown=True)}}
         </li>
         {% else %}
         <li><em>No members assigned yet</em></li>

@@ -130,8 +130,8 @@ def add_membership():
 
 
 @app.route('/memberships/edit/<int:id>', methods=['GET', 'POST'])
-def edit_membership(membership_id):
-    membership = Memberships.query.get_or_404(membership_id)
+def edit_membership(id):
+    membership = Memberships.query.get_or_404(id)
     bands = Bands.query.all()
     members = Members.query.all()
     if request.method == 'POST':
@@ -156,9 +156,9 @@ def delete_membership(id):
     return redirect(url_for('view_by_band'))
 
 
-@app.route('/bands/edit/<int:band_id>', methods=['GET', 'POST'])
-def edit_band(band_id):
-    band = Bands.query.get_or_404(band_id)
+@app.route('/bands/edit/<int:id>', methods=['GET', 'POST'])
+def edit_band(id):
+    band = Bands.query.get_or_404(id)
 
     if request.method == 'POST':
         try:
@@ -179,9 +179,9 @@ def edit_band(band_id):
     return render_template('edit_band.html', band=band)
 
 
-@app.route('/bands/delete/<int:band_id>')
-def delete_band(band_id):
-    band = Bands.query.get_or_404(band_id)
+@app.route('/bands/delete/<int:id>')
+def delete_band(id):
+    band = Bands.query.get_or_404(id)
 
     try:
         db.session.delete(band)
