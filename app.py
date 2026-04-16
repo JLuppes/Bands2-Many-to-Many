@@ -193,6 +193,40 @@ def delete_band(id):
         return redirect(url_for('view_by_band'))
 
 
+@app.route('/members/edit/<int:id>', methods=['GET', 'POST'])
+def edit_member(id):
+    member = Members.query.get_or_404(id)
+
+    if request.method == 'POST':
+        try:
+            member.MemberName = request.form.get('membername')
+            member.MainPosition = request.form.get('mainposition')
+
+            db.session.add(member)
+            db.session.commit()
+            return redirect(url_for('view_by_member'))
+        except Exception as e:
+            db.session.rollback()
+            error = f"Error editing member: {e}"
+            return render_template('edit_member.html', member=member, error=error)
+    return render_template('edit_member.html', member=member)
+
+
+@app.route('/members/delete/<int:id>')
+def delete_member(id):
+    member = Members.query.get_or_404(id)
+    try:
+        db.session.delete(member)
+        db.session.commit()
+        return redirect(url_for('view_by_member'))
+    except Exception as e:
+        db.session.rollback()
+        error = f"Error deleting member: {e}"
+        members = Members.query.all()
+        return render_template('dsiplay_by_member.html', members=members, error=error)
+
+
+
 # Create DB and tables if they don't exist
 with app.app_context():
     db.create_all()

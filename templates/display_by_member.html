@@ -7,12 +7,11 @@
         <a href="{{url_for('view_member', id=member.MemberID)}}">{{ member.MemberName }}</a>
     </h3>
     {# Add links for edit and delete #}
-    {# <a href="{{ url_for('edit_member', member_id=member.MemberID) }}">Edit</a> |
-    <a href="{{ url_for('delete_member', member_id=member.MemberID) }}">Delete</a> #}
+    {{ entity_buttons(entity_name="member", entity_id=member.MemberID)}}
 
     <p><strong>Main Position:</strong> {{ member.MainPosition }}</p>
 
-    <h4>Bands</h4>
+    <h4>Memberships</h4>
     <ul>
         {% for m in member.memberships %}
         <li>
@@ -20,9 +19,7 @@
             m.member.MainPosition }}
             {% if m.StartYear %} ({{ m.StartYear }}{% if m.EndYear %} - {{ m.EndYear }}{% else %} - present{%endif%}){%
             endif %}
-            &nbsp;
-            <a href="{{ url_for('edit_membership', id=m.MembershipID) }}">Edit</a> |
-            <a href="{{ url_for('delete_membership', id=m.MembershipID) }}">Delete</a>
+            {{ entity_buttons(entity_name="membership", entity_id=m.MembershipID, sub=True, dropdown=True)}}
             <br>
             <h5>Albums</h5>
             <ul>

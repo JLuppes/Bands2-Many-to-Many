@@ -9,6 +9,8 @@
 
             <p><strong>Main Position:</strong> {{ member.MainPosition }}</p>
 
+            {{ entity_buttons(entity_name="member", entity_id=member.MemberID)}}
+            
             <h4>Memberships</h4>
             <ul>
                 {% for m in member.memberships %}
