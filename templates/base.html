@@ -29,19 +29,19 @@
         </header>
     </div>
 
-        <div class="container">
-            {# Display error messages (if any) #}
-            {% if error %}
-            <p class="error">{{error}}</p>
-            {% endif %}
+    <div class="container">
+        {# Display error messages (if any) #}
+        {% if error %}
+        <p class="error">{{error}}</p>
+        {% endif %}
 
-            {# Display flashed messages #}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% include 'components/toasts.html' %}
-                {% endif %}
-            {% endwith %}
-        </div>
+        {# Display flashed messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% include 'components/toasts.html' %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
     <main>
         <div class="container">
@@ -63,5 +63,4 @@
 
     {% block scripts %}{% endblock %}
 </body>
-
 </html>
