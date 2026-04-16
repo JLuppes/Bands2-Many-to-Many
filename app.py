@@ -15,6 +15,11 @@ app.config.from_object(CONFIG_TYPE)
 # Create an instance of SQLAlchemy as our db object
 db.init_app(app)
 
+# Create DB and tables if they don't exist
+with app.app_context():
+    db.create_all()
+
+# Add tables to admin view
 admin.init_app(app)
 admin.add_view(ModelView(Bands, db.session, category="Bands"))
 admin.add_view(ModelView(Members, db.session, category="Members"))
@@ -27,12 +32,14 @@ admin.add_view(ModelView(Albums, db.session, category="Albums"))
 # ==========================
 
 # Home page view
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
+# ==========================
+# BANDS
+# ==========================
 
 @app.route('/bands/view')
 def view_by_band():
@@ -46,20 +53,6 @@ def view_band(id):
     band = Bands.query.get_or_404(id)
     memberships = Memberships.query.all()
     return render_template('view_band.html', band=band, memberships=memberships)
-
-
-@app.route('/members/view')
-def view_by_member():
-    members = Members.query.all()
-    memberships = Memberships.query.all()
-    return render_template('display_by_member.html', members=members, memberships=memberships)
-
-
-@app.route('/members/view/<int:id>')
-def view_member(id):
-    member = Members.query.get_or_404(id)
-    memberships = Memberships.query.all()
-    return render_template('view_member.html', member=member, memberships=memberships)
 
 
 @app.route('/bands/add', methods=['GET', 'POST'])
@@ -76,6 +69,61 @@ def add_band():
     return render_template('add_band.html')
 
 
+@app.route('/bands/edit/<int:id>', methods=['GET', 'POST'])
+def edit_band(id):
+    band = Bands.query.get_or_404(id)
+
+    if request.method == 'POST':
+        try:
+
+            band.Name = request.form.get('bandname')
+            band.FormedYear = request.form.get('formedyear')
+            band.HomeLocation = request.form.get('homelocation')
+
+            db.session.add(band)
+            db.session.commit()
+            return redirect(url_for('view_by_band'))
+
+        except Exception as e:
+            db.session.rollback()
+            error = f"Error updating band: {e}"
+            return render_template('edit_band.html', band=band, error=error)
+
+    return render_template('edit_band.html', band=band)
+
+
+@app.route('/bands/delete/<int:id>')
+def delete_band(id):
+    band = Bands.query.get_or_404(id)
+
+    try:
+        db.session.delete(band)
+        db.session.commit()
+        return redirect(url_for('view_by_band'))
+    except Exception as e:
+        db.session.rollback()
+        error = f"Error deleting band: {e}"
+        return redirect(url_for('view_by_band'))
+
+
+# ==========================
+# MEMBERS
+# ==========================
+
+@app.route('/members/view')
+def view_by_member():
+    members = Members.query.all()
+    memberships = Memberships.query.all()
+    return render_template('display_by_member.html', members=members, memberships=memberships)
+
+
+@app.route('/members/view/<int:id>')
+def view_member(id):
+    member = Members.query.get_or_404(id)
+    memberships = Memberships.query.all()
+    return render_template('view_member.html', member=member, memberships=memberships)
+
+
 @app.route('/members/add', methods=['GET', 'POST'])
 def add_member():
     bands = Bands.query.all()  # Students see querying with relationships
@@ -90,20 +138,42 @@ def add_member():
     return render_template('add_member.html', bands=bands)
 
 
-@app.route('/albums/add', methods=['GET', 'POST'])
-def add_album():
-    bands = Bands.query.all()
-    if request.method == 'POST':
-        new_album = Albums(
-            AlbumTitle=request.form['albumtitle'],
-            ReleaseYear=request.form['releaseyear'],
-            BandID=request.form['bandid']
-        )
-        db.session.add(new_album)
-        db.session.commit()
-        return redirect(url_for('view_by_band'))
-    return render_template('add_album.html', bands=bands)
+@app.route('/members/edit/<int:id>', methods=['GET', 'POST'])
+def edit_member(id):
+    member = Members.query.get_or_404(id)
 
+    if request.method == 'POST':
+        try:
+            member.MemberName = request.form.get('membername')
+            member.MainPosition = request.form.get('mainposition')
+
+            db.session.add(member)
+            db.session.commit()
+            return redirect(url_for('view_by_member'))
+        except Exception as e:
+            db.session.rollback()
+            error = f"Error editing member: {e}"
+            return render_template('edit_member.html', member=member, error=error)
+    return render_template('edit_member.html', member=member)
+
+
+@app.route('/members/delete/<int:id>')
+def delete_member(id):
+    member = Members.query.get_or_404(id)
+    try:
+        db.session.delete(member)
+        db.session.commit()
+        return redirect(url_for('view_by_member'))
+    except Exception as e:
+        db.session.rollback()
+        error = f"Error deleting member: {e}"
+        members = Members.query.all()
+        return render_template('dsiplay_by_member.html', members=members, error=error)
+
+
+# ==========================
+# MEMBERSHIPS
+# ==========================
 
 @app.route('/memberships/add', methods=['GET', 'POST'])
 def add_membership():
@@ -156,80 +226,28 @@ def delete_membership(id):
     return redirect(url_for('view_by_band'))
 
 
-@app.route('/bands/edit/<int:id>', methods=['GET', 'POST'])
-def edit_band(id):
-    band = Bands.query.get_or_404(id)
+# ==========================
+# ALBUMS
+# ==========================
 
+@app.route('/albums/add', methods=['GET', 'POST'])
+def add_album():
+    bands = Bands.query.all()
     if request.method == 'POST':
-        try:
-
-            band.Name = request.form.get('bandname')
-            band.FormedYear = request.form.get('formedyear')
-            band.HomeLocation = request.form.get('homelocation')
-
-            db.session.add(band)
-            db.session.commit()
-            return redirect(url_for('view_by_band'))
-
-        except Exception as e:
-            db.session.rollback()
-            error = f"Error updating band: {e}"
-            return render_template('edit_band.html', band=band, error=error)
-
-    return render_template('edit_band.html', band=band)
-
-
-@app.route('/bands/delete/<int:id>')
-def delete_band(id):
-    band = Bands.query.get_or_404(id)
-
-    try:
-        db.session.delete(band)
+        new_album = Albums(
+            AlbumTitle=request.form['albumtitle'],
+            ReleaseYear=request.form['releaseyear'],
+            BandID=request.form['bandid']
+        )
+        db.session.add(new_album)
         db.session.commit()
         return redirect(url_for('view_by_band'))
-    except Exception as e:
-        db.session.rollback()
-        error = f"Error deleting band: {e}"
-        return redirect(url_for('view_by_band'))
+    return render_template('add_album.html', bands=bands)
 
 
-@app.route('/members/edit/<int:id>', methods=['GET', 'POST'])
-def edit_member(id):
-    member = Members.query.get_or_404(id)
-
-    if request.method == 'POST':
-        try:
-            member.MemberName = request.form.get('membername')
-            member.MainPosition = request.form.get('mainposition')
-
-            db.session.add(member)
-            db.session.commit()
-            return redirect(url_for('view_by_member'))
-        except Exception as e:
-            db.session.rollback()
-            error = f"Error editing member: {e}"
-            return render_template('edit_member.html', member=member, error=error)
-    return render_template('edit_member.html', member=member)
-
-
-@app.route('/members/delete/<int:id>')
-def delete_member(id):
-    member = Members.query.get_or_404(id)
-    try:
-        db.session.delete(member)
-        db.session.commit()
-        return redirect(url_for('view_by_member'))
-    except Exception as e:
-        db.session.rollback()
-        error = f"Error deleting member: {e}"
-        members = Members.query.all()
-        return render_template('dsiplay_by_member.html', members=members, error=error)
-
-
-
-# Create DB and tables if they don't exist
-with app.app_context():
-    db.create_all()
+# ==========================
+# APP LAUNCH
+# ==========================
 
 # Run the app if this file is launched via Python (instead of flask run --debug)
 if __name__ == '__main__':
