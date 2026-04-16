@@ -11,10 +11,9 @@ class Bands(db.Model):
     BandName = db.Column(db.String(80), nullable=False)
     FormedYear = db.Column(db.Integer)
     HomeLocation = db.Column(db.String(80))
-    # Removed members relationship in favor of memberships
-    # members = db.relationship('Members', backref='band', lazy=True)
+
     memberships = db.relationship('Memberships', backref='band', lazy=True)
-    albums = db.relationship('Albums', backref='band', lazy=True)
+    album_links = db.relationship('BandAlbums', backref='band', lazy=True)
 
 
 class Members(db.Model):
@@ -39,9 +38,15 @@ class Memberships(db.Model):
     EndYear = db.Column(db.Integer)
 
 
+class BandAlbums(db.Model):
+    BandAlbumID = db.Column(db.Integer, primary_key=True)
+    BandID = db.Column(db.Integer, db.ForeignKey('bands.BandID'), nullable=False)
+    AlbumID = db.Column(db.Integer, db.ForeignKey('albums.AlbumID'), nullable=False)
+
+
 class Albums(db.Model):
     AlbumID = db.Column(db.Integer, primary_key=True)
-    BandID = db.Column(db.Integer, db.ForeignKey(
-        'bands.BandID'), nullable=False)
     AlbumTitle = db.Column(db.String(80), nullable=False)
     ReleaseYear = db.Column(db.Integer)
+
+    band_links = db.relationship('BandAlbums', backref='album', lazy=True)

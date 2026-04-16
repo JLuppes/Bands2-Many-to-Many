@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from model import db, Bands, Members, Albums, Memberships, admin
+from model import db, Bands, Members, Albums, Memberships, BandAlbums, admin
 from flask_admin.contrib.sqla import ModelView
 import os
 
@@ -93,15 +93,26 @@ def add_member():
 @app.route('/albums/add', methods=['GET', 'POST'])
 def add_album():
     bands = Bands.query.all()
+    
     if request.method == 'POST':
         new_album = Albums(
             AlbumTitle=request.form['albumtitle'],
-            ReleaseYear=request.form['releaseyear'],
-            BandID=request.form['bandid']
+            ReleaseYear=request.form['releaseyear']
         )
+
         db.session.add(new_album)
         db.session.commit()
+
+        band_ids = request.form.getlist('bandid')
+
+        for band_id in band_ids:
+            link = BandAlbums(BandID=band_id, AlbumID=new_album.AlbumID)
+            db.session.add(link)
+
+        db.session.commit()
+
         return redirect(url_for('view_by_band'))
+
     return render_template('add_album.html', bands=bands)
 
 
