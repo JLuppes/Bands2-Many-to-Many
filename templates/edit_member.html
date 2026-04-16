@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %} {{super()}} - Edit Member {% endblock %}
+{% block content %}
+<h2>Add Member</h2>
+<form method="post" id="memberForm">
+    <input type="hidden" name="memberid" value="{{member.MemberID}}">
+    <label>Name:</label><input type="text" name="membername" value="{{member.MemberName}}"><br>
+    <label>Main Position:</label><input type="text" name="mainposition" value="{{member.MainPosition}}"><br>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

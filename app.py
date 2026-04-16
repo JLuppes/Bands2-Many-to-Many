@@ -140,9 +140,8 @@ def add_member():
 
 @app.route('/members/edit/<int:id>', methods=['GET', 'POST'])
 def edit_member(id):
-    member = Members.query.get_or_404(id)
-
     if request.method == 'POST':
+        member = Members.query.get_or_404(request.form.get('memberid'))
         try:
             member.MemberName = request.form.get('membername')
             member.MainPosition = request.form.get('mainposition')
@@ -154,6 +153,7 @@ def edit_member(id):
             db.session.rollback()
             error = f"Error editing member: {e}"
             return render_template('edit_member.html', member=member, error=error)
+    member = Members.query.get_or_404(id)
     return render_template('edit_member.html', member=member)
 
 
