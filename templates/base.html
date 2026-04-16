@@ -23,24 +23,32 @@
     {% from 'components/buttons.html' import entity_buttons %}
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            {% block header %} {# Start header #}
-            {% include 'navbar.html' %}
-            {% endblock %} {# End header #}
+            {% block header %}
+                {% include 'navbar.html' %}
+            {% endblock %}
         </header>
     </div>
 
     <div class="container">
-        {# Display error messages (if any) #} {% if error %}
+        {# Display error messages (if any) #}
+        {% if error %}
         <p class="error">{{error}}</p>
-        {% endif %} {# Display flashed messages #} {% with messages =
-        get_flashed_messages(with_categories=true) %} {% if messages %} {% include
-        'components/toasts.html' %} {% endif %} {% endwith %}
-    </div>
-    <div class="container"> {% block content %}{% endblock %}</div>
+        {% endif %}
 
+        {# Display flashed messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% include 'components/toasts.html' %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="container">
+    {% block content %}{% endblock %}
+    </div>
 
     {% block footer %}
-    {% include 'footer.html'%}
+        {% include 'footer.html'%}
     {% endblock %}
 
     <!-- Bootstrap script -->
