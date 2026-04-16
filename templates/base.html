@@ -1,3 +1,4 @@
+{% from 'components/buttons.html' import entity_buttons %}
 <!doctype html>
 <html lang="en">
 
@@ -20,7 +21,6 @@
 </head>
 
 <body>
-    {% from 'components/buttons.html' import entity_buttons %}
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
             {% block header %}
@@ -29,40 +29,38 @@
         </header>
     </div>
 
-    <div class="container">
-        {# Display error messages (if any) #}
-        {% if error %}
-        <p class="error">{{error}}</p>
-        {% endif %}
-
-        {# Display flashed messages #}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% include 'components/toasts.html' %}
+        <div class="container">
+            {# Display error messages (if any) #}
+            {% if error %}
+            <p class="error">{{error}}</p>
             {% endif %}
-        {% endwith %}
-    </div>
 
-    <div class="container">
-    {% block content %}{% endblock %}
-    </div>
+            {# Display flashed messages #}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% include 'components/toasts.html' %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+    <main>
+        <div class="container">
+        {% block content %}{% endblock %}
+        </div>
+    </main>
 
     {% block footer %}
         {% include 'footer.html'%}
     {% endblock %}
 
-    <!-- Toasts -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $('.toast').toast('show');
-        });
-    </script>
-
     <!-- Bootstrap script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+
+    <!-- Toasts Script -->
+    <script src="{{url_for('static', filename='toasts.js')}}" defer></script>
+
     {% block scripts %}{% endblock %}
 </body>
 
