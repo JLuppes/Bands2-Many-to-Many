@@ -28,12 +28,25 @@
         {% endfor %}
     </ul>
 
-    <h4>Albums</h4>
-    <ul>
-        {% for album in band.albums %}
-        <li>{{ album.AlbumTitle }} ({{ album.ReleaseYear }})</li>
-        {% endfor %}
-    </ul>
+   <h4>Albums</h4>
+<ul>
+    {% set seen = [] %}
+    {% for link in band.album_links %}
+        {% if link.album.AlbumID not in seen %}
+            <li>
+    {{ link.album.AlbumTitle }} ({{ link.album.ReleaseYear }})
+    <br>
+    Also with:
+    {% for album_link in link.album.band_links %}
+        {% if album_link.band.BandID != band.BandID %}
+            {{ album_link.band.BandName }}
+        {% endif %}
+    {% endfor %}
+</li>
+            {% set _ = seen.append(link.album.AlbumID) %}
+        {% endif %}
+    {% endfor %}
+</ul>
 </section>
 <hr />
 {% endfor %} {% endblock %}
