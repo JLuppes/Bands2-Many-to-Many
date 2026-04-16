@@ -1,5 +1,4 @@
 {% extends "base.html" %} {% block title %} {{super()}} - Bands {% endblock %}
-{% from 'components/buttons.html' import entity_buttons %}
 {% block content %}
 <h2>Bands</h2>
 
@@ -10,7 +9,7 @@
     </h3>
     {# Add links for edit and delete #}
     {{ entity_buttons(entity_name="band", entity_id=band.BandID)}}
-
+    
     <p><strong>Home:</strong> {{ band.HomeLocation }}</p>
 
     {# Update members section #}
