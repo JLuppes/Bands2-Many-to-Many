@@ -36,9 +36,16 @@ def index():
 
 @app.route('/bands/view')
 def view_by_band():
-    bands = Bands.query.all()
-    memberships = Memberships.query.all()
-    return render_template('display_by_band.html', bands=bands, memberships=memberships)
+    search = request.args.get('search', '')
+
+    if search:
+        bands = Bands.query.filter(
+            Bands.BandName.ilike(f"%{search}%")
+        ).all()
+    else:
+        bands = Bands.query.all()
+
+    return render_template('display_by_band.html', bands=bands, search=search)
 
 
 @app.route('/bands/view/<int:id>')

@@ -2,6 +2,16 @@
 {% block content %}
 <h2>Bands</h2>
 
+
+
+<form method="GET" action="{{ url_for('view_by_band') }}">
+    <input type="text" name="search" placeholder="Search bands..." value="{{ search or '' }}">
+    <button type="submit">Search</button>
+</form>
+
+
+
+
 {% for band in bands %}
 <section>
     <h3>
@@ -18,7 +28,8 @@
     <ul>
         {% for m in band.memberships %}
         <li>
-            <a href="{{url_for('view_member', id=m.member.MemberID)}}">{{ m.member.MemberName }}</a> - {{ m.Role or m.member.MainPosition }}
+            <a href="{{url_for('view_member', id=m.member.MemberID)}}">{{ m.member.MemberName }}</a> - {{ m.Role or
+            m.member.MainPosition }}
             {% if m.StartYear %} ({{ m.StartYear }}{% if m.EndYear %} - {{ m.EndYear }}{% else %} - present{% endif
             %}){% endif %}
             &nbsp;
@@ -31,28 +42,29 @@
     </ul>
 
     <h4>Albums</h4>
-<ul>
-    {% for album in band.albums %}
-    <li>
-        <strong>{{ album.AlbumTitle }}</strong> ({{ album.ReleaseYear }})
+    <ul>
+        {% for album in band.albums %}
+        <li>
+            <a href="{{ url_for('view_band', id=band.BandID) }}">
+                {{ album.AlbumTitle }} ({{ album.ReleaseYear }})
+            </a>
 
-        <br>
+            <br>
 
-        <small>
-            Collaborating Bands:
-            {% for b in album.bands %}
+            <small>
+                Collaborating Bands:
+                {% for b in album.bands %}
                 {% if b.BandID != band.BandID %}
-                    {{ b.BandName }}{% if not loop.last %}, {% endif %}
+                <a href="{{ url_for('view_band', id=b.BandID) }}">
+                    {{ b.BandName }}
+                </a>
+                {% if not loop.last %}, {% endif %}
                 {% endif %}
-            {% else %}
-                None
-            {% endfor %}
-        </small>
-    </li>
-    {% else %}
-        <li><em>No albums yet</em></li>
-    {% endfor %}
-</ul>
+                {% endfor %}
+            </small>
+        </li>
+        {% endfor %}
+    </ul>
 </section>
 <hr />
 {% endfor %} {% endblock %}
