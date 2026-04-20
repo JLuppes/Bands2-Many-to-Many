@@ -1,18 +1,28 @@
 {% extends "base.html" %}
 {% block title %} {{super()}} - Add Album {% endblock %}
+
 {% block content %}
 <h2>Add Album</h2>
-<form method="post">
-    <label>Album Title:</label><input type="text" name="albumtitle"><br>
-    <label>Release Year:</label><input type="number" name="releaseyear"><br>
 
-    <label>Band:</label>
-    <select name="bandid">
+<form method="post">
+
+    <label>Album Title:</label>
+    <input type="text" name="title" required><br>
+
+    <label>Release Year:</label>
+    <input type="number" name="releaseyear"><br>
+
+    <label>Select Bands (hold CTRL / CMD to choose multiple):</label><br>
+
+    <select name="bands" multiple size="5">
         {% for band in bands %}
         <option value="{{ band.BandID }}">{{ band.BandName }}</option>
         {% endfor %}
-    </select><br>
+    </select>
 
-    <button type="submit">Save</button>
+    <br><br>
+
+    <button type="submit">Save Album</button>
 </form>
+
 {% endblock %}

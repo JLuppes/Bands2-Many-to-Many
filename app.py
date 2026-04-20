@@ -93,15 +93,27 @@ def add_member():
 @app.route('/albums/add', methods=['GET', 'POST'])
 def add_album():
     bands = Bands.query.all()
+
     if request.method == 'POST':
-        new_album = Albums(
-            AlbumTitle=request.form['albumtitle'],
-            ReleaseYear=request.form['releaseyear'],
-            BandID=request.form['bandid']
+        title = request.form['title']
+        year = request.form.get('releaseyear') or None
+        band_ids = request.form.getlist('bands')
+
+        album = Albums(
+            AlbumTitle=title,
+            ReleaseYear=year
         )
-        db.session.add(new_album)
+
+        for bid in band_ids:
+            band = Bands.query.get(int(bid))
+            if band:
+                album.bands.append(band)
+
+        db.session.add(album)
         db.session.commit()
+
         return redirect(url_for('view_by_band'))
+
     return render_template('add_album.html', bands=bands)
 
 
@@ -130,12 +142,11 @@ def add_membership():
 
 
 @app.route('/memberships/edit/<int:id>', methods=['GET', 'POST'])
-def edit_membership(membership_id):
-    membership = Memberships.query.get_or_404(membership_id)
+def edit_membership(id):
+    membership = Memberships.query.get_or_404(id)
     bands = Bands.query.all()
     members = Members.query.all()
     if request.method == 'POST':
-        membership.MembershipID = request.form.get('membership_id')
         membership.BandID = request.form.get('bandid')
         membership.MemberID = request.form.get('memberid')
         membership.Role = request.form.get('role')
@@ -163,7 +174,7 @@ def edit_band(band_id):
     if request.method == 'POST':
         try:
 
-            band.Name = request.form.get('bandname')
+            band.BandName = request.form.get('bandname')
             band.FormedYear = request.form.get('formedyear')
             band.HomeLocation = request.form.get('homelocation')
 

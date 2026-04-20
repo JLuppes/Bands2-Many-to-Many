@@ -31,11 +31,28 @@
     </ul>
 
     <h4>Albums</h4>
-    <ul>
-        {% for album in band.albums %}
-        <li>{{ album.AlbumTitle }} ({{ album.ReleaseYear }})</li>
-        {% endfor %}
-    </ul>
+<ul>
+    {% for album in band.albums %}
+    <li>
+        <strong>{{ album.AlbumTitle }}</strong> ({{ album.ReleaseYear }})
+
+        <br>
+
+        <small>
+            Collaborating Bands:
+            {% for b in album.bands %}
+                {% if b.BandID != band.BandID %}
+                    {{ b.BandName }}{% if not loop.last %}, {% endif %}
+                {% endif %}
+            {% else %}
+                None
+            {% endfor %}
+        </small>
+    </li>
+    {% else %}
+        <li><em>No albums yet</em></li>
+    {% endfor %}
+</ul>
 </section>
 <hr />
 {% endfor %} {% endblock %}
