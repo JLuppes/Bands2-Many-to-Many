@@ -24,7 +24,7 @@
             <h5>Albums</h5>
             <ul>
                 {% for album in m.band.albums %}
-                {% if m.StartYear <= album.ReleaseYear <=m.EndYear %}
+                {% if m.StartYear and m.StartYear <= album.ReleaseYear and (m.EndYear is none or album.ReleaseYear <= m.EndYear) %}
                 <li>{{album.AlbumTitle}} ({{ album.ReleaseYear }})</li>
                 {%endif%}
                 {% endfor %}

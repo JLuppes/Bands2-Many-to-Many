@@ -309,6 +309,12 @@ def delete_membership(id):
 # ALBUMS
 # ==========================
 
+@app.route('/albums/view')
+def view_albums():
+    albums = Albums.query.order_by(Albums.ReleaseYear).all()
+    bands = Bands.query.order_by(Bands.BandName).all()
+    return render_template('display_albums.html', albums=albums, bands=bands)
+
 @app.route('/albums/add', methods=['GET', 'POST'])
 def add_album():
     bands = Bands.query.all()
@@ -316,13 +322,20 @@ def add_album():
         try:
             album_title = request.form['albumtitle']
             release_year = request.form['releaseyear']
-            band_id = request.form['bandid']
+            band_ids = request.form.getlist('bandids')
 
             new_album = Albums(
                 AlbumTitle=album_title,
                 ReleaseYear=release_year,
-                BandID=band_id
+                # BandID=band_id
             )
+
+            for band_id in band_ids:
+                band = Bands.query.get(band_id)
+                if band:
+                    new_album.bands.append(band)
+
+
             db.session.add(new_album)
             db.session.commit()
             flash(f'Added album: {album_title}', 'success')
@@ -332,7 +345,32 @@ def add_album():
             flash('Error adding album', 'danger')
     return render_template('add_album.html', bands=bands)
 
+@app.route('/albums/add_band/<int:album_id>', methods = ['POST'])
+def add_band_to_album(album_id):
+    album = Albums.query.get_or_404(album_id)
+    band_id = request.form.get('bandid')
 
+    if not band_id:
+        flash('Please select a band.', 'warning')
+        return redirect(url_for('view_albums'))
+    
+    band = Bands.query.get(band_id)
+    if not band:
+        flash('Band not found.', 'danger')
+        return redirect(url_for('view_albums'))
+
+    try:
+        if band in album.bands:
+            flash(f'{band.BandName} is already on "{album.AlbumTitle}"', 'warning')
+        else:
+            album.bands.append(band)
+            db.session.commit()
+            flash(f'Added {band.BandName} to "{album.AlbumTitle}"', 'success')
+    except Exception as e:
+        db.session.rollback()
+        # flash('Error adding band to album', 'danger')
+
+    return redirect(url_for('view_albums'))
 # ==========================
 # APP LAUNCH
 # ==========================

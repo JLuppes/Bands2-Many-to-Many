@@ -5,6 +5,12 @@ db = SQLAlchemy()
 
 admin = Admin()
 
+band_albums = db.Table(
+    'band_albums',
+    db.Column('BandID', db.Integer, db.ForeignKey('bands.BandID'), primary_key=True),
+    db.Column('AlbumID', db.Integer, db.ForeignKey('albums.AlbumID'), primary_key=True)
+)
+
 
 class Bands(db.Model):
     BandID = db.Column(db.Integer, primary_key=True)
@@ -14,7 +20,7 @@ class Bands(db.Model):
     # Removed members relationship in favor of memberships
     # members = db.relationship('Members', backref='band', lazy=True)
     memberships = db.relationship('Memberships', backref='band', lazy=True)
-    albums = db.relationship('Albums', backref='band', lazy=True)
+    albums = db.relationship('Albums', secondary=band_albums, back_populates='bands', lazy=True)
 
 
 class Members(db.Model):
@@ -41,7 +47,8 @@ class Memberships(db.Model):
 
 class Albums(db.Model):
     AlbumID = db.Column(db.Integer, primary_key=True)
-    BandID = db.Column(db.Integer, db.ForeignKey(
-        'bands.BandID'), nullable=False)
+    # BandID = db.Column(db.Integer, db.ForeignKey(
+    #     'bands.BandID'), nullable=False)
     AlbumTitle = db.Column(db.String(80), nullable=False)
     ReleaseYear = db.Column(db.Integer)
+    bands = db.relationship('Bands', secondary=band_albums, back_populates='albums', lazy=True)
