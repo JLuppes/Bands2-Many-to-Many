@@ -12,7 +12,7 @@
             <h4>Members</h4>
             <ul>
                 {% for member in band.memberships %}
-                <li>{{ member.member.MemberName }} – {{ member.member.MainPosition }}</li>
+                <li>{{ member.member.MemberName }} – {{ member.Role }}</li>
                 {% endfor %}
             </ul>
 
