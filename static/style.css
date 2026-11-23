@@ -13,6 +13,10 @@ label {
   display: inline-block;
 }
 
+button {
+  margin-top: 10px;
+}
+
 .band-focus ul li {
   list-style-type: none;
 }

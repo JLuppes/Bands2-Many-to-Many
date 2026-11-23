@@ -1,38 +1,63 @@
 {% extends "base.html" %} {% block title %} {{super()}} - Bands {% endblock %}
 {% block content %}
 <h2>Bands</h2>
+{% if bands|length < 1 %} <p>No bands in database!</p>
+    {% else %} {% for band in bands %}
+    <section>
+        <h3>
+            <a href="{{url_for('view_band', id=band.BandID)}}">{{ band.BandName }} ({{ band.FormedYear }})</a>
+        </h3>
+        <p><strong>Home:</strong> {{ band.HomeLocation }}</p>
 
-{% for band in bands %}
-<section>
-    <h3>
-        <a href="{{url_for('view_band', id=band.BandID)}}">{{ band.BandName }} ({{ band.FormedYear }})</a>
-    </h3>
-    {# Add links for edit and delete #}
-    {{ entity_buttons(entity_name="band", entity_id=band.BandID)}}
-    
-    <p><strong>Home:</strong> {{ band.HomeLocation }}</p>
+        {# <a href="{{url_for('edit_band', id = band.BandID)}}">Edit</a>
+        <a href="{{url_for('', id = band.BandID)}}">Delete</a> #}
 
-    {# Update members section #}
-    <h4>Members</h4>
-    <ul>
-        {% for m in band.memberships %}
-        <li>
-            <a href="{{url_for('view_member', id=m.member.MemberID)}}">{{ m.member.MemberName }}</a> - {{ m.Role or m.member.MainPosition }}
-            {% if m.StartYear %} ({{ m.StartYear }}{% if m.EndYear %} - {{ m.EndYear }}{% else %} - present{% endif
-            %}){% endif %}
-            {{ entity_buttons(entity_name="membership", entity_id=m.MembershipID, sub=True, dropdown=True)}}
-        </li>
-        {% else %}
-        <li><em>No members assigned yet</em></li>
-        {% endfor %}
-    </ul>
+        {#
+        <h4>Members</h4>
+        <ul>
+            {% for member in band.members %}
+            <li>{{ member.MemberName }} – {{ member.MainPosition }}</li>
+            {% endfor %}
+        </ul>
+        #}
 
-    <h4>Albums</h4>
-    <ul>
-        {% for album in band.albums %}
-        <li>{{ album.AlbumTitle }} ({{ album.ReleaseYear }})</li>
-        {% endfor %}
-    </ul>
-</section>
-<hr />
-{% endfor %} {% endblock %}
+        <h4>Members/Memberships</h4>
+        <ul>
+            {% for member_relationship in band.memberships%}
+            <li>
+                {{member_relationship.member.MemberName}} - {{member_relationship.Role or member_relationship.member.MainPosition}}
+                {% if member_relationship.StartYear %} {{member_relationship.StartYear}} 
+                {% if member_relationship.EndYear%} - {{member_relationship.EndYear }} {%else%} - present {% endif %} {% endif%}
+
+            </li>
+
+            {% else %}
+                <li>No members assigned yet</li>
+            {% endfor%}
+        </ul>
+        <h4>Albums</h4>
+        <ul>
+            {# {{band.albumships}} #}
+            {# <br> #}
+            {# {{albumships}} #}
+            {# <br> #}
+            
+            {% for album in band.albumships %}
+            
+            <li>{{ album.Title }} ({{ album.Release }}) </li>
+
+
+            {% for bandA in bands %}
+                {% for albumA in bandA.albumships %}
+                    {% if albumA.AlbumID == album.AlbumID and bandA.BandName != band.BandName%}
+                        {{bandA.BandName}}
+                    {%endif%}
+                {% endfor %}
+            {% endfor %}
+
+
+            {% endfor %}
+        </ul>
+    </section>
+    <hr />
+    {% endfor %} {% endif %} {% endblock %}
