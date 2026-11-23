@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block title %} {{super()}} - Albums {% endblock %}
+{% block content %}
+<h2>Albums</h2>
+{% if albums|length < 1 %} <p>No albums in database!</p>
+    {% else %} {% for album in albums %}
+    <section>
+        <h3>
+            <a>{{ album.AlbumTitle }} ({{ album.ReleaseYear }})</a>
+        </h3>
+
+        </ul>
+        <h4>Bands</h4>
+        <ul>
+            {% for bandA in bands %}
+                {% for albumA in bandA.albumships %}
+                    {% if albumA.AlbumID == album.AlbumID%}
+                        {{bandA.BandName}}<br>
+                    {%endif%}
+                {% endfor %}
+            {% endfor %}
+
+
+        </ul>
+    </section>
+    <hr />
+    {% endfor %} {% endif %} {% endblock %}

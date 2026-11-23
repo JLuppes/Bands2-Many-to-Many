@@ -42,10 +42,22 @@ def view_by_band():
     return render_template('display_by_band.html', bands=bands, memberships=memberships,albumships=albumships, albums=albums)
 
 
+@app.route('/albums/view')
+def view_by_album():
+    bands = Bands.query.all()
+    memberships = Memberships.query.all()
+    albumships = Albumships.query.all()
+    albums = Albums.query.all()
+    return render_template('display_by_album.html', bands=bands,albumships=albumships, albums=albums)
+
+
 @app.route('/bands/view/<int:id>')
 def view_band(id):
     band = Bands.query.get_or_404(id)
-    return render_template('view_band.html', band=band)
+    bands = Bands.query.all()
+    albumships = Albumships.query.all()
+    albums = Albums.query.all()
+    return render_template('view_band.html', band=band,bands=bands,albumships=albumships, albums=albums)
 
 
 @app.route('/bands/add', methods=['GET', 'POST'])

@@ -50,7 +50,7 @@
             {% for bandA in bands %}
                 {% for albumA in bandA.albumships %}
                     {% if albumA.AlbumID == album.AlbumID and bandA.BandName != band.BandName%}
-                        {{bandA.BandName}}
+                        {{bandA.BandName}}<br>
                     {%endif%}
                 {% endfor %}
             {% endfor %}

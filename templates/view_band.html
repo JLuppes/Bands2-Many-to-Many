@@ -21,6 +21,14 @@
                 
                 {% for album in band.albumships %}
                 <li>{{ album.Title }} ({{ album.Release }})</li>
+                {% for bandA in bands %}
+                    {% for albumA in bandA.albumships %}
+                        {% if albumA.AlbumID == album.AlbumID and bandA.BandName != band.BandName%}
+                            <li>{{bandA.BandName}}</li>
+                        {%endif%}
+                    {% endfor %}
+                {% endfor %}
+                </ul>
                 {% endfor %}
             </ul>
             </p>
