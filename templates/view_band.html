@@ -5,31 +5,33 @@
     <div class="container my-5">
         <div class="band-focus p-5 text-center bg-body-secondary rounded-3">
             <h1 class="text-body-emphasis">{{ band.BandName }} ({{ band.FormedYear }})</h1>
-            {{ entity_buttons(entity_name="band", entity_id=band.BandID)}}
+            <p class="col-lg-8 mx-auto fs-5 text-muted">
+
             <p><strong>Home:</strong> {{ band.HomeLocation }}</p>
 
-            {# Update members section #}
-            <h2>Memberships</h2>
+            <h4>Members</h4>
             <ul>
-                {% for m in band.memberships %}
-                <li>
-                    <a href="{{url_for('view_member', id=m.member.MemberID)}}">{{ m.member.MemberName }}</a> - {{ m.Role or m.member.MainPosition }}
-                    {% if m.StartYear %} ({{ m.StartYear }}{% if m.EndYear %} - {{ m.EndYear }}{% else %} - present{%endif%}){% endif %}
-                    {{ entity_buttons(entity_name="membership", entity_id=m.MembershipID, sub=True, dropdown=True)}}
-                </li>
-                {% else %}
-                <li><em>No members assigned yet</em></li>
+                {% for member in band.memberships %}
+                <li>{{ member.member.MemberName }} – {{ member.Role }}</li>
                 {% endfor %}
             </ul>
 
-            <h2>Albums</h2>
+            <h4>Albums</h4>
             <ul>
-                {% for album in band.albums %}
-                <li>{{ album.AlbumTitle }} ({{ album.ReleaseYear }})</li>
-                {% else %}
-                <li>No albums yet!</li>
+                
+                {% for album in band.albumships %}
+                <li>{{ album.Title }} ({{ album.Release }})</li>
+                {% for bandA in bands %}
+                    {% for albumA in bandA.albumships %}
+                        {% if albumA.AlbumID == album.AlbumID and bandA.BandName != band.BandName%}
+                            <li>{{bandA.BandName}}</li>
+                        {%endif%}
+                    {% endfor %}
+                {% endfor %}
+                </ul>
                 {% endfor %}
             </ul>
+            </p>
         </div>
     </div>
 </section>

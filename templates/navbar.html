@@ -1,56 +1,94 @@
-<a href="{{url_for('index')}}"
-    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-    <img class="bi me-2" width="32" height="32" src="{{url_for('static', filename='logo.png')}}" />
-    <span class="fs-4">Bands 2</span>
+<a
+  href="{{url_for('index')}}"
+  class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+>
+  <img
+    class="bi me-2"
+    width="32"
+    height="32"
+    src="{{url_for('static', filename='logo.png')}}"
+  />
+  <span class="fs-4">Bands 2</span>
 </a>
 <ul class="nav nav-pills">
-    <li class="nav-item">
-        <a href="{{url_for('index')}}" class="nav-link" aria-current="page">Home</a>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Bands
-        </a>
-        <ul class="dropdown-menu">
-            <li>
-                <a class="dropdown-item" href="{{url_for('view_by_band')}}">View All</a>
-            </li>
-            <li>
-                <hr class="dropdown-divider" />
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{url_for('add_band')}}">Add a Band</a>
-            </li>
-        </ul>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Albums
-        </a>
-        <ul class="dropdown-menu">
-            <li>
-                <a class="dropdown-item" href="{{url_for('add_album')}}">Add an Album</a>
-            </li>
-        </ul>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Members
-        </a>
-        <ul class="dropdown-menu">
-            <li>
-                <a class="dropdown-item" href="{{url_for('view_by_member')}}">View All</a>
-            </li>
-            <li>
-                <hr class="dropdown-divider" />
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{url_for('add_member')}}">Add a Member</a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{url_for('add_membership')}}">Add a Membership</a>
-            </li>
-        </ul>
-    </li>
-    <li class="nav-item"><a href="{{url_for('admin.index')}}" class="nav-link">Admin</a></li>
+  <li class="nav-item">
+    <a href="{{url_for('index')}}" class="nav-link" aria-current="page">Home</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a
+      class="nav-link dropdown-toggle"
+      href="{{url_for('index')}}"
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      Bands
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <a class="dropdown-item" href="{{url_for('view_by_band')}}">View All</a>
+      </li>
+      <li>
+        <hr class="dropdown-divider" />
+      </li>
+      <li>
+        <a class="dropdown-item" href="{{url_for('add_band')}}">Add a Band</a>
+      </li>
+    </ul>
+  </li>
+  <li class="nav-item dropdown">
+    <a
+      class="nav-link dropdown-toggle"
+      href="#"
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      Albums
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <a class="dropdown-item" href="{{url_for('view_by_album')}}"
+          >View all Albums</a
+        >
+      </li>
+        <hr class="dropdown-divider" />
+      <li>
+        <a class="dropdown-item" href="{{url_for('add_album')}}"
+          >Add an Album</a
+        >
+      </li>
+      <li>
+        <a class="dropdown-item" href="{{url_for('add_albumship')}}"
+          >Add an Albumship</a
+        >
+      </li>
+    </ul>
+  </li>
+  <li class="nav-item dropdown">
+    <a
+      class="nav-link dropdown-toggle"
+      href="#"
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      Members
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <a class="dropdown-item" href="{{url_for('add_member')}}"
+          >Add a Member</a
+        >
+      </li>
+      <li>
+        <a class="dropdown-item" href="{{url_for('add_membership')}}"
+          >Add a Membership</a
+        >
+      </li>
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a href="{{url_for('admin.index')}}" class="nav-link">Admin</a>
+  </li>
 </ul>

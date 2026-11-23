@@ -1,4 +1,3 @@
-{% from 'components/buttons.html' import entity_buttons %}
 <!doctype html>
 <html lang="en">
 
@@ -23,44 +22,31 @@
 <body>
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            {% block header %}
-                {% include 'navbar.html' %}
-            {% endblock %}
+            {% block header %} {# Start header #}
+            {% include 'navbar.html' %}
+            {% endblock %} {# End header #}
         </header>
     </div>
 
     <div class="container">
-        {# Display error messages (if any) #}
-        {% if error %}
+        {# Display error messages (if any) #} {% if error %}
         <p class="error">{{error}}</p>
-        {% endif %}
-
-        {# Display flashed messages #}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% include 'components/toasts.html' %}
-            {% endif %}
-        {% endwith %}
+        {% endif %} {# Display flashed messages #} {% with messages =
+        get_flashed_messages(with_categories=true) %} {% if messages %} {% include
+        'components/toasts.html' %} {% endif %} {% endwith %}
     </div>
+    <div class="container"> {% block content %}{% endblock %}</div>
 
-    <main>
-        <div class="container">
-        {% block content %}{% endblock %}
-        </div>
-    </main>
 
     {% block footer %}
-        {% include 'footer.html'%}
+    {% include 'footer.html'%}
     {% endblock %}
 
     <!-- Bootstrap script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-
-    <!-- Toasts Script -->
-    <script src="{{url_for('static', filename='toasts.js')}}" defer></script>
-
     {% block scripts %}{% endblock %}
 </body>
+
 </html>
